@@ -17,3 +17,9 @@ TODO: general
 -------------
 
 * [ ] dynamically adjust return values of wrapped functions (use dangling return value)?
+
+TODO: experimental
+------------------
+
+* [ ] Define wrapper-class to inherit from, which is able to overwrite the wrapped
+      methods of the inheriting/host class 
