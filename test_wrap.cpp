@@ -237,29 +237,29 @@ BOOST_AUTO_TEST_CASE(test_wrap_after_basics_3)
     
 }
 
-// BOOST_AUTO_TEST_CASE(test_wrap_after_basics_4)
-// {
-//     // clean
-//     messages_recieved.clear();
-//     messages_expected.clear();
-// 
-//     // set exptected values
-//     messages_expected = {"foo", "yet another"};
-// 
-//     // wrap
-//     auto wrapped = after<decltype(foo_function), decltype(baz_function)>(
-//         foo_function, baz_function
-//     );
-// 
-//     // call
-//     wrapped();
-//     
-//     // check.
-//     BOOST_REQUIRE_EQUAL_COLLECTIONS(
-//         std::begin(messages_recieved), std::end(messages_recieved),
-//         std::begin(messages_expected), std::end(messages_expected)
-//     );
-//     
-// }
+BOOST_AUTO_TEST_CASE(test_wrap_after_basics_4)
+{
+    // clean
+    messages_recieved.clear();
+    messages_expected.clear();
+
+    // set exptected values
+    messages_expected = {"foo", "after foo"};
+
+    // wrap
+    auto wrapped = after<decltype(foo_function), decltype(baz_function)>(
+        foo_function, baz_function
+    );
+
+    // call
+    wrapped();
+    
+    // check.
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(
+        std::begin(messages_recieved), std::end(messages_recieved),
+        std::begin(messages_expected), std::end(messages_expected)
+    );
+    
+}
 
 BOOST_AUTO_TEST_SUITE_END()
