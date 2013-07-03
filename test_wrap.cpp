@@ -21,11 +21,11 @@
 /*****************************************************************************/
 std::vector<std::string> messages_recieved;
 std::vector<std::string> messages_expected;
-
-void foo_function()  { messages_recieved.push_back(std::string("foo"));         }
-void bar_function()  { messages_recieved.push_back(std::string("before foo"));  }
-void baz_function()  { messages_recieved.push_back(std::string("after foo"));   }
-void quux_function() { messages_recieved.push_back(std::string("yet another")); }
+                     
+void foo_function() { messages_recieved.push_back(std::string("foo"));         }
+void bar_function() { messages_recieved.push_back(std::string("before foo"));  }
+void baz_function() { messages_recieved.push_back(std::string("after foo"));   }
+int quux_function() { messages_recieved.push_back(std::string("q")); return 1; }
 
 
 /*****************************************************************************/
@@ -39,9 +39,11 @@ BOOST_AUTO_TEST_CASE(test_wrap_before_basics_1)
     messages_recieved.clear();
     messages_expected.clear();
 
+    auto wrapped_1 = before(foo_function, bar_function);
+
+    // no call
     /* messages_expected will be empty */
 
-    auto wrapped_1 = before(foo_function, bar_function);
 
     BOOST_REQUIRE_EQUAL_COLLECTIONS( /* test both still empty. */
         std::begin(messages_recieved), std::end(messages_recieved),
@@ -211,5 +213,53 @@ BOOST_AUTO_TEST_CASE(test_wrap_after_basics_2)
     );
     
 }
+
+BOOST_AUTO_TEST_CASE(test_wrap_after_basics_3)
+{
+    // clean
+    messages_recieved.clear();
+    messages_expected.clear();
+
+    // set exptected values
+    messages_expected = {"foo", "q"};
+
+    // wrap
+    auto wrapped = after(foo_function, quux_function);
+
+    // call
+    wrapped();
+    
+    // check.
+    BOOST_REQUIRE_EQUAL_COLLECTIONS(
+        std::begin(messages_recieved), std::end(messages_recieved),
+        std::begin(messages_expected), std::end(messages_expected)
+    );
+    
+}
+
+// BOOST_AUTO_TEST_CASE(test_wrap_after_basics_4)
+// {
+//     // clean
+//     messages_recieved.clear();
+//     messages_expected.clear();
+// 
+//     // set exptected values
+//     messages_expected = {"foo", "yet another"};
+// 
+//     // wrap
+//     auto wrapped = after<decltype(foo_function), decltype(baz_function)>(
+//         foo_function, baz_function
+//     );
+// 
+//     // call
+//     wrapped();
+//     
+//     // check.
+//     BOOST_REQUIRE_EQUAL_COLLECTIONS(
+//         std::begin(messages_recieved), std::end(messages_recieved),
+//         std::begin(messages_expected), std::end(messages_expected)
+//     );
+//     
+// }
 
 BOOST_AUTO_TEST_SUITE_END()
